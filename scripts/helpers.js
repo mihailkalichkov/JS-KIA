@@ -87,6 +87,12 @@ Raphael.fn.connect = function (obj1, obj2, line, bg) {
         };
     }
 };
-Raphael.fn.branchOut = function () {
-    console.log(this);
-}
+Raphael.el.branchOut = function (text) {
+    var branchx = this.attr('x'),
+        branchy = this.attr('y');
+    var txtBox = paper.text(branchx, branchy - 50, text).getBBox();
+    var child = paper.rect(txtBox.x - 10, txtBox.y - 10, txtBox.width + 20, txtBox.height + 20, 7)
+        .attr(childTemplate);
+
+    return child;
+};
