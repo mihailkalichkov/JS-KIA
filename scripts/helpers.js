@@ -1,3 +1,4 @@
+// Do NOT modify this fucker - magic
 Raphael.fn.connect = function (obj1, obj2, line, bg) {
     if (obj1.line && obj1.from && obj1.to) {
         line = obj1;
@@ -87,10 +88,12 @@ Raphael.fn.connect = function (obj1, obj2, line, bg) {
         };
     }
 };
+
+// TODO: export variables to resources.js
 Raphael.el.branchOut = function (text) {
     var branchx = this.attr('x'),
         branchy = this.attr('y');
-    var txtBox = paper.text(branchx, branchy - 50, text).getBBox();
+    var txtBox = paper.text(branchx - 50, branchy - 50, text).getBBox();
     var child = paper.rect(txtBox.x - 10, txtBox.y - 10, txtBox.width + 20, txtBox.height + 20, 7)
         .attr(childTemplate);
 

@@ -1,23 +1,33 @@
 window.onload = function () {
-    paper = Raphael('mindContainer', 800, 600);
+    paper = Raphael('mindContainer', mindMapWidth, mindMapHeight);
 
-    var connected = [];
+    var connected = []; // collect nodes so you can track  links between them
 
-    paper.text(430, 200, 'ROOT');
-    var root = paper.rect(390, 180, 60, 40, 10)
+    // Generate ROOT node
+    // always generate txt first
+    var txtBox = paper.text(mindMapWidth / 2, mindMapHeight / 2, 'ROOT').getBBox();
+    // node buble after that
+    var root = paper
+        .rect(txtBox.x - 10, txtBox.y - 10, txtBox.width + 20, txtBox.height + 20, 17)
         .attr(rootTemplate);
 
-    var child = root.branchOut('smile you sexy\n mother\n fucker')
-        .drag(onDragMove, onDragStart, onDragEnd)
+    // sample node that derives from ROOT
+    // branchOut() is custom - helpers.js
+    var child = root
+        .branchOut('smile you sexy\n mother\n fucker')
+        .drag(onDragMove, onDragStart, onDragEnd); // make draggable; ROOT is handicapped (by design)
+
+    // remember the connectios
+    // TODO: child creation to be triggered by event
     connected.push(paper.connect(root, child, '#555'))
 
+    // drag event handlers
     function onDragStart() {
-        //console.log(this);
         this.ox = this.attr('x');
         this.oy = this.attr('y');
         this.animate({
             'fill-opacity': .1
-        }, 500, 'easeInOut');
+        }, 500, 'easeInOut'); // TODO: play around with animation
     };
 
     function onDragMove(dx, dy) {
@@ -27,22 +37,25 @@ window.onload = function () {
         };
         this.attr(delta);
 
+        // TODO: think of abstracting this formula - used often
         var txtDelta = {
             x: delta.x + this.attr('width') / 2,
             y: delta.y + this.attr('height') / 2
         };
+        // this works because the first element is 
+        // txt element & next is rect element
         paper.getById(this.id - 1).attr(txtDelta);
 
         for (var i = connected.length; i--;) {
-            //    if (i % 2 === 0)
             paper.connect(connected[i]);
         }
+
         paper.safari();
     };
 
     function onDragEnd() {
         this.animate({
             'fill-opacity': 0.7
-        }, 500, 'easeIn');
+        }, 500, 'easeIn'); // TODO: play around with animation
     };
 }
